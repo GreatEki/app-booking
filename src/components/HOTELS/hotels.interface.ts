@@ -10,4 +10,5 @@ export interface HotelsModelAttribute {
   rooms: string;
   cheapestPrice: number;
   featured: boolean;
+  motto: string;
 }
