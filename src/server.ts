@@ -5,10 +5,13 @@ import NotFoundError from "./errors/NotFoundError";
 import mongoose from "mongoose";
 import path from "path";
 import router from "./routes";
+import cors from "./middleware/cors";
 
 const app = express();
 
 app.use(express.json());
+
+app.use(cors);
 
 dotenv.config({ path: path.resolve(__dirname, "./config/config.env") });
 

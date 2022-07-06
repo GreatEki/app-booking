@@ -116,7 +116,7 @@ export const deleteHotel = async (req: Request, res: Response) => {
     return res.json({
       success: true,
       status: "OK",
-      statusCode: 200,
+      statusCode: 204,
       message: "Hotel Deleted",
       data: delHotel,
     });
