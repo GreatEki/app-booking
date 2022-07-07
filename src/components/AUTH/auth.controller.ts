@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { User } from "../../models";
 import BadRequestError from "../../errors/BadRequestError";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 export const registerUser = async (req: Request, res: Response) => {
   try {
@@ -37,6 +38,57 @@ export const registerUser = async (req: Request, res: Response) => {
       statusCode: 201,
       message: "Registration successful",
       data: result,
+    });
+  } catch (err) {
+    return res.json({
+      success: false,
+      status: err.status,
+      statusCode: err.statusCode,
+      message: err.message,
+    });
+  }
+};
+
+export const loginUser = async (req: Request, res: Response) => {
+  try {
+    const { username, password } = req.body;
+
+    const user = await User.findOne({ username });
+
+    if (!user) {
+      throw new BadRequestError("Invalid credentials");
+    }
+
+    // compare passwords
+
+    const passwordMatch = bcrypt.compareSync(password, user.password);
+
+    if (!passwordMatch) {
+      throw new BadRequestError("Invalid credentials");
+    }
+
+    // // Generate token
+    const token = jwt.sign(
+      {
+        username: user.username,
+        email: user.email,
+        isAdmin: user.isAdmin,
+      },
+      `${process.env.JWT_SECRET}`
+    );
+
+    return res.json({
+      status: "Successful",
+      statusCode: 200,
+      message: "Login successful",
+      data: {
+        token,
+        user: {
+          username: user.username,
+          email: user.email,
+          isAdmin: user.isAdmin,
+        },
+      },
     });
   } catch (err) {
     return res.json({
