@@ -7,6 +7,7 @@ import path from "path";
 import router from "./routes";
 import cors from "./middleware/cors";
 import cookieParser from "cookie-parser";
+import verifyToken from "./middleware/verifyToken";
 
 const app = express();
 
@@ -14,6 +15,7 @@ app.use(express.json());
 
 app.use(cors);
 app.use(cookieParser());
+app.use(verifyToken);
 
 dotenv.config({ path: path.resolve(__dirname, "./config/config.env") });
 
