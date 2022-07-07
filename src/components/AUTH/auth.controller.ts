@@ -77,13 +77,14 @@ export const loginUser = async (req: Request, res: Response) => {
       `${process.env.JWT_SECRET}`
     );
 
-    return res.json({
+    return res.cookie("access_token", token, { httpOnly: true }).json({
       status: "Successful",
       statusCode: 200,
       message: "Login successful",
       data: {
         token,
         user: {
+          id: user._id,
           username: user.username,
           email: user.email,
           isAdmin: user.isAdmin,
