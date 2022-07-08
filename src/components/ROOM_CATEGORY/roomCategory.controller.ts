@@ -42,6 +42,33 @@ export const createRoomCategory = async (req: Request, res: Response) => {
   }
 };
 
+export const updateRoomCategory = async (req: Request, res: Response) => {
+  try {
+    const { categoryId } = req.params;
+
+    const updatedCat = await RoomCategory.findByIdAndUpdate(
+      categoryId,
+      { $set: req.body },
+      { new: true }
+    );
+
+    return res.json({
+      success: true,
+      status: "OK",
+      statusCode: 200,
+      message: "Room category data updated",
+      data: updatedCat,
+    });
+  } catch (err) {
+    return res.json({
+      success: false,
+      status: err.status,
+      statusCode: err.statusCode,
+      message: err.message,
+    });
+  }
+};
+
 export const getAllHotelRoomCategories = async (
   req: Request,
   res: Response
