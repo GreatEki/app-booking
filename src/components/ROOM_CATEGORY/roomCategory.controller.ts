@@ -77,3 +77,33 @@ export const getAllHotelRoomCategories = async (
     });
   }
 };
+
+export const getRoomCategoryById = async (req: Request, res: Response) => {
+  try {
+    const { hotelId, categoryId } = req.params;
+
+    const roomCategory = await RoomCategory.findOne({
+      _id: categoryId,
+      hotelId,
+    }).populate({ path: "hotelId" });
+
+    if (!roomCategory) {
+      throw new NotFoundError("Room Category not found");
+    }
+
+    return res.json({
+      success: true,
+      status: "Success",
+      statusCode: 200,
+      message: "Room category retrieved",
+      data: roomCategory,
+    });
+  } catch (err) {
+    return res.json({
+      success: false,
+      status: err.status,
+      statusCode: err.statusCode,
+      message: err.message,
+    });
+  }
+};
