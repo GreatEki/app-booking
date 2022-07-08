@@ -18,7 +18,7 @@ const verifyToken = async (req: Request, res: Response, next: NextFunction) => {
 
     jwt.verify(token, `${process.env.JWT_SECRET}`, (err: any, user: any) => {
       if (err) {
-        throw new UnauthorizedError("Invalid Token, Unauthorization Failed");
+        throw new UnauthorizedError("Invalid Token, Authorization Failed");
       }
 
       req.user = user;
@@ -28,6 +28,8 @@ const verifyToken = async (req: Request, res: Response, next: NextFunction) => {
   } catch (err) {
     return res.json({
       success: false,
+      status: err.status,
+      statusCode: err.statusCode,
       message: err.message,
     });
   }
