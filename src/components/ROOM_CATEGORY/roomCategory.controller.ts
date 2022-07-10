@@ -5,7 +5,7 @@ import { Hotels, RoomCategory } from "../../models";
 
 export const createRoomCategory = async (req: Request, res: Response) => {
   try {
-    const { hotelId } = req.params;
+    const { name, description, roomNumbers, hotelId } = req.body;
 
     // Check if hotel exists
     const theHotel = await Hotels.findById(hotelId);
@@ -13,8 +13,6 @@ export const createRoomCategory = async (req: Request, res: Response) => {
     if (!theHotel) {
       throw new NotFoundError("Hotel not found");
     }
-
-    const { name, description, roomNumbers } = req.body;
 
     const newCategory = new RoomCategory({
       name,

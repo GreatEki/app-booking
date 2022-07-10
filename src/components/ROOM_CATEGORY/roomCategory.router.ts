@@ -6,9 +6,11 @@ import {
   updateRoomCategory,
 } from "./roomCategory.controller";
 
+import { valCreateRoomCategory } from "./roomCategory.validation";
+
 const router = Router();
 
-router.route("/:hotelId").post(createRoomCategory);
+router.route("/").post(valCreateRoomCategory, createRoomCategory);
 
 router.route("/:hotelId").get(getAllHotelRoomCategories);
 
