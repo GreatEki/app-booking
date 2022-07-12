@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import BadRequestError from "../../errors/BadRequestError";
 import NotFoundError from "../../errors/NotFoundError";
 import { Room, RoomCategory } from "../../models";
 
@@ -14,6 +15,11 @@ export const addRoom = async (req: Request, res: Response) => {
     }
 
     // Check if roomNumber has been created before to avoid duplication
+    const dupliRoom = await Room.findOne({ roomNumber });
+
+    if (dupliRoom) {
+      throw new BadRequestError("Room with number already created");
+    }
 
     const newRoom = new Room({
       roomNumber,
@@ -29,7 +35,9 @@ export const addRoom = async (req: Request, res: Response) => {
     await RoomCategory.findOneAndUpdate(
       { _id: roomCategoryId },
       {
-        $addToSet: { roomNumbers: roomNumber },
+        $addToSet: {
+          roomNumbers: [{ roomId: result._id, roomNo: result.roomNumber }],
+        },
       }
     );
 
@@ -83,6 +91,13 @@ export const getAllRoomsByCategoryId = async (req: Request, res: Response) => {
   try {
     const { categoryId } = req.params;
 
+    // does category exist
+    const existingCat = await RoomCategory.findById(categoryId);
+
+    if (!existingCat) {
+      throw new NotFoundError("Room category not found");
+    }
+
     const allRooms = await Room.find({ roomCategoryId: categoryId });
 
     return res.json({
@@ -116,10 +131,10 @@ export const deleteRoom = async (req: Request, res: Response) => {
 
     // remove roomNumber from RoomCategory roomNumbers
     await RoomCategory.findOneAndUpdate(
-      { _id: theRoom._id },
+      { _id: theRoom.roomCategoryId },
       {
         $pullAll: {
-          roomNumbers: [theRoom.roomNumber],
+          roomNumbers: [{ roomId: theRoom._id, roomNo: theRoom.roomNumber }],
         },
       }
     );

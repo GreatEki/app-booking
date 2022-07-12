@@ -10,7 +10,11 @@ const HotelSchema: Schema = new Schema<HotelsModelAttribute>(
     distance: { type: String, required: false },
     photo: { type: [String], required: false },
     rating: { type: Number, required: false, min: 0, max: 5 },
-    rooms: { type: String, required: false },
+    rooms: {
+      type: [],
+      required: false,
+      ref: "room",
+    },
     cheapestPrice: { type: Number, required: true },
     featured: { type: Boolean, required: false },
     motto: { type: String, required: true },

@@ -3,7 +3,7 @@ import { RoomModelAttributes } from "./room.interface";
 
 const RoomSchema: Schema = new Schema<RoomModelAttributes>(
   {
-    roomNumber: { type: Number, required: true },
+    roomNumber: { type: Number, required: true, unique: true },
     roomCategoryId: {
       type: Schema.Types.ObjectId,
       required: true,

@@ -7,7 +7,7 @@ export interface HotelsModelAttribute {
   photo: string[];
   description: string;
   rating: number;
-  rooms: string;
+  rooms: any[];
   cheapestPrice: number;
   featured: boolean;
   motto: string;

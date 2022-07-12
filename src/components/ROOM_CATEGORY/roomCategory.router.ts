@@ -1,6 +1,7 @@
 import { Router } from "express";
 import {
   createRoomCategory,
+  deleteRoomCategory,
   getAllHotelRoomCategories,
   getRoomCategoryById,
   updateRoomCategory,
@@ -16,6 +17,6 @@ router.route("/:hotelId").get(getAllHotelRoomCategories);
 
 router.route("/hotel/:hotelId/category/:categoryId").get(getRoomCategoryById);
 
-router.route("/:categoryId").put(updateRoomCategory);
+router.route("/:categoryId").put(updateRoomCategory).delete(deleteRoomCategory);
 
 export default router;

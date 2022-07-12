@@ -132,3 +132,28 @@ export const getRoomCategoryById = async (req: Request, res: Response) => {
     });
   }
 };
+
+export const deleteRoomCategory = async (req: Request, res: Response) => {
+  try {
+    const { categoryId } = req.params;
+
+    const delCategory = await RoomCategory.findOneAndRemove({
+      _id: categoryId,
+    });
+
+    return res.json({
+      success: true,
+      status: "OK",
+      statusCode: 200,
+      message: "Room Category deleted",
+      data: delCategory,
+    });
+  } catch (err) {
+    return res.json({
+      success: false,
+      status: err.status,
+      statusCode: err.statusCode,
+      message: err.message,
+    });
+  }
+};
