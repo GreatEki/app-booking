@@ -4,11 +4,12 @@ import {
   updateRoom,
   getAllRoomsByCategoryId,
   deleteRoom,
+  getAllRooms,
 } from "./room.controller";
 
 const router = Router();
 
-router.route("/").post(addRoom);
+router.route("/").post(addRoom).get(getAllRooms);
 
 router.route("/:roomId").put(updateRoom).delete(deleteRoom);
 

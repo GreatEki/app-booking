@@ -98,7 +98,10 @@ export const getAllRoomsByCategoryId = async (req: Request, res: Response) => {
       throw new NotFoundError("Room category not found");
     }
 
-    const allRooms = await Room.find({ roomCategoryId: categoryId });
+    const allRooms = await Room.find({ roomCategoryId: categoryId }).populate({
+      path: "roomCategoryId",
+      select: ["name", "description"],
+    });
 
     return res.json({
       success: true,
@@ -153,6 +156,27 @@ export const deleteRoom = async (req: Request, res: Response) => {
       success: false,
       status: err.status,
       statusCode: err.statusCode,
+      message: err.message,
+    });
+  }
+};
+
+export const getAllRooms = async (req: Request, res: Response) => {
+  try {
+    const allRooms = await Room.find({});
+
+    return res.json({
+      success: true,
+      status: "OK",
+      statusCode: 200,
+      message: "All rooms fetched",
+      data: allRooms,
+    });
+  } catch (err) {
+    return res.json({
+      success: false,
+      status: err.status,
+      statusdCode: err.statusCode,
       message: err.message,
     });
   }

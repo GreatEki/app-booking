@@ -137,16 +137,20 @@ export const deleteRoomCategory = async (req: Request, res: Response) => {
   try {
     const { categoryId } = req.params;
 
-    const delCategory = await RoomCategory.findOneAndRemove({
-      _id: categoryId,
-    });
+    const theCategory = await RoomCategory.findById(categoryId);
+
+    if (!theCategory) {
+      throw new NotFoundError("Category not found");
+    }
+
+    await theCategory.remove();
 
     return res.json({
       success: true,
       status: "OK",
       statusCode: 200,
       message: "Room Category deleted",
-      data: delCategory,
+      data: theCategory,
     });
   } catch (err) {
     return res.json({

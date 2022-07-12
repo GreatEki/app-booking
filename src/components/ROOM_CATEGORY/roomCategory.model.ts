@@ -18,16 +18,16 @@ const RoomCategorySchema: Schema = new Schema<RoomCategoryModelAttributes>(
   }
 );
 
-const RoomCategory = model<RoomCategoryModelAttributes>(
-  "room_category",
-  RoomCategorySchema
-);
-
 RoomCategorySchema.pre("remove", async function (next) {
   const roomCat = this;
   await Room.deleteMany({ roomCategoryId: roomCat._id });
 
   next();
 });
+
+const RoomCategory = model<RoomCategoryModelAttributes>(
+  "room_category",
+  RoomCategorySchema
+);
 
 export default RoomCategory;
