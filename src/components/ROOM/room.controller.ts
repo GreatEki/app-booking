@@ -13,6 +13,8 @@ export const addRoom = async (req: Request, res: Response) => {
       throw new NotFoundError("No category found for this hotel");
     }
 
+    // Check if roomNumber has been created before to avoid duplication
+
     const newRoom = new Room({
       roomNumber,
       roomCategoryId,
@@ -25,9 +27,9 @@ export const addRoom = async (req: Request, res: Response) => {
 
     // Push Room ID to Room Category
     await RoomCategory.findOneAndUpdate(
-      { _id: result._id },
+      { _id: roomCategoryId },
       {
-        $push: { roomNumbers: roomNumber },
+        $addToSet: { roomNumbers: roomNumber },
       }
     );
 
@@ -72,6 +74,70 @@ export const updateRoom = async (req: Request, res: Response) => {
       success: false,
       status: err.status,
       statusdCode: err.statusCode,
+      message: err.message,
+    });
+  }
+};
+
+export const getAllRoomsByCategoryId = async (req: Request, res: Response) => {
+  try {
+    const { categoryId } = req.params;
+
+    const allRooms = await Room.find({ roomCategoryId: categoryId });
+
+    return res.json({
+      success: true,
+      status: "OK",
+      statusCode: 200,
+      message: "All room retrieved",
+      count: allRooms.length,
+      data: allRooms,
+    });
+  } catch (err) {
+    return res.json({
+      success: false,
+      status: err.status,
+      statusCode: err.statusCode,
+      message: err.message,
+    });
+  }
+};
+
+export const deleteRoom = async (req: Request, res: Response) => {
+  try {
+    const { roomId } = req.params;
+
+    // find room
+    const theRoom = await Room.findById(roomId);
+
+    if (!theRoom) {
+      throw new NotFoundError("Room not found");
+    }
+
+    // remove roomNumber from RoomCategory roomNumbers
+    await RoomCategory.findOneAndUpdate(
+      { _id: theRoom._id },
+      {
+        $pullAll: {
+          roomNumbers: [theRoom.roomNumber],
+        },
+      }
+    );
+
+    const delRoom = await Room.findByIdAndDelete(roomId);
+
+    return res.json({
+      success: true,
+      staus: "OK",
+      stausCode: 200,
+      message: "Room deleted",
+      data: delRoom,
+    });
+  } catch (err) {
+    return res.json({
+      success: false,
+      status: err.status,
+      statusCode: err.statusCode,
       message: err.message,
     });
   }
