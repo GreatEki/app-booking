@@ -30,14 +30,14 @@ export const uploadHandler = async (req: FileUpload, res: Response) => {
       const md5 = file.md5;
       const URL = "/uploads/" + md5 + extension;
 
-      const result = await util.promisify(file.mv)("./public" + URL);
+      await util.promisify(file.mv)("./public" + URL);
 
       res.json({
         success: true,
         status: "OK",
         statusCode: 201,
         message: "File uploaded successfully",
-        result,
+        url: `http://localhost:9500${URL}`,
       });
     }
   } catch (err) {

@@ -18,6 +18,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(busboy());
 app.use(fileUpload());
+app.use(express.static("./public"));
 
 app.use(cors);
 app.use(cookieParser());
