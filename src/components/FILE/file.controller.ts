@@ -3,7 +3,11 @@ import path from "path";
 import BadRequestError from "../../errors/BadRequestError";
 import util from "util";
 
-export const uploadHandler = async (req: Request, res: Response) => {
+interface FileUpload extends Request {
+  files: any;
+}
+
+export const uploadHandler = async (req: FileUpload, res: Response) => {
   try {
     const file = req.files.file;
 
@@ -20,19 +24,20 @@ export const uploadHandler = async (req: Request, res: Response) => {
       }
 
       if (fileSize > 10) {
-        throw new BadRequestError("File should not be greater than 15MB");
+        throw new BadRequestError("File should not be greater than 10MB");
       }
 
       const md5 = file.md5;
-      const URL = "/uploads" + md5 + extension;
+      const URL = "/uploads/" + md5 + extension;
 
-      util.promisify(file.mv)("../../../public" + URL);
+      const result = await util.promisify(file.mv)("./public" + URL);
 
       res.json({
         success: true,
         status: "OK",
         statusCode: 201,
         message: "File uploaded successfully",
+        result,
       });
     }
   } catch (err) {

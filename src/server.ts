@@ -10,6 +10,7 @@ import cookieParser from "cookie-parser";
 import verifyToken from "./middleware/verifyToken";
 import fileUpload from "express-fileupload";
 import busboy from "connect-busboy";
+import AuthRoutes from "./components/AUTH/auth.router";
 
 const app = express();
 
@@ -20,7 +21,6 @@ app.use(fileUpload());
 
 app.use(cors);
 app.use(cookieParser());
-app.use(verifyToken);
 
 dotenv.config({ path: path.resolve(__dirname, "./config/config.env") });
 
@@ -29,6 +29,8 @@ mongoose.connection.on("disconnected", () => {
   console.log("Mongo database has disconnected");
 });
 
+app.use("/api/auth", AuthRoutes);
+app.use(verifyToken);
 app.use("/api", router);
 
 app.use((req: Request, res: Response, next: NextFunction) => {
