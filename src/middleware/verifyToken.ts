@@ -5,6 +5,7 @@ import jwt from "jsonwebtoken";
 declare module "express-serve-static-core" {
   export interface Request {
     user: any;
+    files: any;
   }
 }
 

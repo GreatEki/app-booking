@@ -3,11 +3,7 @@ import path from "path";
 import BadRequestError from "../../errors/BadRequestError";
 import util from "util";
 
-interface FileUpload extends Request {
-  files: any;
-}
-
-export const uploadHandler = async (req: FileUpload, res: Response) => {
+export const uploadHandler = async (req: Request, res: Response) => {
   try {
     const file = req.files.file;
 
